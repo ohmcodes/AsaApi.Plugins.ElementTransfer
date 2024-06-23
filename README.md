@@ -6,6 +6,14 @@ ARK:SA ServerAPI Plugin that support Element Transfer between clusters
 - Ofcourse the ARK:SA Server
 - Sqlite(automatic) or Mysql
 
+# Features
+- Transfer elements between clusters
+- Required Upload/Download Terminal to use /upload /download commands
+- Drops beacon, Transmitter, Obilisk and any other terminal
+- commands can be change via config
+- Able to spend points
+- Permission groups
+
 # Dependencies
 - [ArkShop](https://gameservershub.com/forums/resources/ark-survival-ascended-arkshop-crossplay-supported.714/)
 - [Permissions](https://gameservershub.com/forums/resources/ark-survival-ascended-permissions-crossplay-supported.713/)
