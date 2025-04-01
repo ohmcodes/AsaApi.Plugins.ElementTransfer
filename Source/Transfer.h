@@ -85,27 +85,29 @@ void UploadElementCallback(AShooterPlayerController* pc, FString* param, int, in
 	{
 		if (!item->ClassPrivateField())
 		{
-			Log::GetLog()->info("Item is Invalid {}", item->DescriptiveNameBaseField().ToString());
+			//Log::GetLog()->info("Item is Invalid {}", item->DescriptiveNameBaseField().ToString());
 			continue;
 		}
 
 		if (item->bAllowRemovalFromInventory().Get() == false)
 		{
-			Log::GetLog()->info("Item {} is bAllowRemovalFromInventory {}", item->DescriptiveNameBaseField().ToString(), item->bAllowRemovalFromInventory().Get());
+			//Log::GetLog()->info("Item {} is bAllowRemovalFromInventory {}", item->DescriptiveNameBaseField().ToString(), item->bAllowRemovalFromInventory().Get());
 			continue;
 		}
 
 		if (item->bIsEngram().Get() == true)
 		{
-			Log::GetLog()->info("{} isEngram {}", item->DescriptiveNameBaseField().ToString(), item->bIsEngram().Get());
+			//Log::GetLog()->info("{} isEngram {}", item->DescriptiveNameBaseField().ToString(), item->bIsEngram().Get());
 			continue;
 		}
 
 		if (item->IsItemSkin(false))
 		{
-			Log::GetLog()->info("{} isItemSkin {}", item->DescriptiveNameBaseField().ToString(), item->IsItemSkin(false));
+			//Log::GetLog()->info("{} isItemSkin {}", item->DescriptiveNameBaseField().ToString(), item->IsItemSkin(false));
 			continue;
 		}
+
+		Log::GetLog()->info("{}", item->DescriptiveNameBaseField().ToString());
 
 		if (!item->DescriptiveNameBaseField().Contains("Element"))
 		{
