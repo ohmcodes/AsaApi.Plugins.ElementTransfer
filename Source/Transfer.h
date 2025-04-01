@@ -389,6 +389,8 @@ void DownloadElementCallback(AShooterPlayerController* pc, FString* param, int, 
 		// remaining uploade limit reached
 		if (remainingToBeDownload <= 0) break;
 
+		int totaldownloadAmount = downloadAmount - uploadedElement;
+
 		if (UpdateElementDB(pc->GetEOSId(), downloadAmount))
 		{
 			UPrimalItem::AddNewItem(
