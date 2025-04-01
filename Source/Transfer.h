@@ -347,8 +347,16 @@ void DownloadElementCallback(AShooterPlayerController* pc, FString* param, int, 
 
 	int maxStackQty = element->GetMaxItemQuantity(AsaApi::GetApiUtils().GetWorld());
 
-	// set downloadAmount
-	downloadAmount = uploadedElement > maxStackQty ? maxStackQty : uploadedElement < elementDownloadLimit || elementDownloadLimit == 0 ? uploadedElement : elementDownloadLimit;
+	// no limit
+	if (elementDownloadLimit != -1)
+	{
+		// set downloadAmount
+		downloadAmount = uploadedElement > maxStackQty ? maxStackQty : uploadedElement;
+	}
+	else
+	{
+		downloadAmount = uploadedElement > elementDownloadLimit ? elementDownloadLimit : uploadedElement;
+	}
 
 	if (parsedCmd.IsValidIndex(1))
 	{
