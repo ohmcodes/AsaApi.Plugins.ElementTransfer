@@ -361,7 +361,7 @@ void DownloadElementCallback(AShooterPlayerController* pc, FString* param, int, 
 		downloadAmount = uploadedElement > elementDownloadLimit ? elementDownloadLimit : uploadedElement;
 
 		remainingToBeDownload = downloadAmount;
-		Log::GetLog()->warn("with limit downloadAmount {}", downloadAmount);
+		Log::GetLog()->warn("with limit downloadAmount {}", elementDownloadLimit);
 	}
 
 	if (parsedCmd.IsValidIndex(1))
