@@ -8,7 +8,7 @@ void UploadElementCallback(AShooterPlayerController* pc, FString* param, int, in
 	if (pc->GetPlayerCharacter()->IsDead()) return;
 
 	// Check Trigger interval
-	if (ElementTransfer::uploadCooldown != 0 && ElementTransfer::counter >= ElementTransfer::uploadCooldown)
+	if (ElementTransfer::uploadCooldown != 0 && ElementTransfer::counter < ElementTransfer::uploadCooldown)
 	{
 		if (ElementTransfer::config["Debug"].value("ElementTransfer", false) == true)
 		{
@@ -181,7 +181,7 @@ void DownloadElementCallback(AShooterPlayerController* pc, FString* param, int, 
 		Log::GetLog()->warn("Function: {}", __FUNCTION__);
 
 	// Check Trigger interval
-	if (ElementTransfer::downloadCooldown != 0 && ElementTransfer::counter >= ElementTransfer::downloadCooldown)
+	if (ElementTransfer::downloadCooldown != 0 && ElementTransfer::counter < ElementTransfer::downloadCooldown)
 	{
 		if (ElementTransfer::config["Debug"].value("ElementTransfer", false) == true)
 		{
@@ -386,7 +386,7 @@ void CheckElementUploadedCallback(AShooterPlayerController* pc, FString*, int, i
 		Log::GetLog()->warn("Function: {}", __FUNCTION__);
 
 	// Check Trigger interval
-	if (ElementTransfer::checkLimitCooldown != 0 && ElementTransfer::counter >= ElementTransfer::checkLimitCooldown)
+	if (ElementTransfer::checkLimitCooldown != 0 && ElementTransfer::counter < ElementTransfer::checkLimitCooldown)
 	{
 		if (ElementTransfer::config["Debug"].value("ElementTransfer", false) == true)
 		{
@@ -472,7 +472,7 @@ void CheckDownloadLimitCallback(AShooterPlayerController* pc, FString*, int, int
 		Log::GetLog()->warn("Function: {}", __FUNCTION__);
 
 	// Check Trigger interval
-	if (ElementTransfer::checkLimitCooldown != 0 && ElementTransfer::counter >= ElementTransfer::checkLimitCooldown)
+	if (ElementTransfer::checkLimitCooldown != 0 && ElementTransfer::counter < ElementTransfer::checkLimitCooldown)
 	{
 		if (ElementTransfer::config["Debug"].value("ElementTransfer", false) == true)
 		{
