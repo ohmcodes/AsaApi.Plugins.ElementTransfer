@@ -72,7 +72,7 @@ void UploadElementCallback(AShooterPlayerController* pc, FString* param, int, in
 	int uploadedElement = CheckUploadedDB(pc->GetEOSId());
 
 	// limit reached
-	if (uploadedElement >= elementUploadLimit)
+	if (elementUploadLimit != -1 && uploadedElement >= elementUploadLimit)
 	{
 		AsaApi::GetApiUtils().SendNotification(pc, FColorList::Orange, ElementTransfer::NotifDisplayTime, ElementTransfer::NotifTextSize, nullptr, ElementTransfer::config["Messages"].value("UploadLimitMSG", "You have reached server maximum upload limit. {0}").c_str(), elementUploadLimit);
 		return;
@@ -126,7 +126,7 @@ void UploadElementCallback(AShooterPlayerController* pc, FString* param, int, in
 		int uploadAvailableLimit = std::abs(uploadedElement - elementUploadLimit);
 		
 		// limit reached
-		if (uploadAvailableLimit <= 0)
+		if (elementUploadLimit!=-1 && uploadAvailableLimit <= 0)
 		{
 			AsaApi::GetApiUtils().SendNotification(pc, FColorList::Orange, ElementTransfer::NotifDisplayTime, ElementTransfer::NotifTextSize, nullptr, ElementTransfer::config["Messages"].value("UploadLimitMSG", "You have reached server maximum upload limit. {0}").c_str(), elementUploadLimit);
 			break;
@@ -271,6 +271,7 @@ void DownloadElementCallback(AShooterPlayerController* pc, FString* param, int, 
 
 	int uploadedElement = CheckUploadedDB(pc->GetEOSId());
 
+	// no element
 	if (uploadedElement <= 0)
 	{
 		AsaApi::GetApiUtils().SendNotification(pc, FColorList::Orange, ElementTransfer::NotifDisplayTime, ElementTransfer::NotifTextSize, nullptr, ElementTransfer::config["Messages"].value("NoElementMSG", "No uploaded element").c_str());
@@ -302,22 +303,21 @@ void DownloadElementCallback(AShooterPlayerController* pc, FString* param, int, 
 	int downloadAmount = 0;
 	int downloadedElement = 0;
 	int remainingToBeDownload = 0;
-	int downloadLimit = command.value("LimitDownloadCount", 0);
 
 	TArray<FString> parsedCmd;
 	param->ParseIntoArray(parsedCmd, L" ", false);
 
 	// limit reached
-	if (downloadedElement >= downloadLimit)
+	if (elementDownloadLimit!=-1 && downloadedElement >= elementDownloadLimit)
 	{
-		AsaApi::GetApiUtils().SendNotification(pc, FColorList::Orange, ElementTransfer::NotifDisplayTime, ElementTransfer::NotifTextSize, nullptr, ElementTransfer::config["Messages"].value("DownloadLimitMSG", "You have reached server maximum download limit. {0}").c_str(), downloadLimit);
+		AsaApi::GetApiUtils().SendNotification(pc, FColorList::Orange, ElementTransfer::NotifDisplayTime, ElementTransfer::NotifTextSize, nullptr, ElementTransfer::config["Messages"].value("DownloadLimitMSG", "You have reached server maximum download limit. {0}").c_str(), elementDownloadLimit);
 		return;
 	}
 
 	int maxStackQty = element->GetMaxItemQuantity(AsaApi::GetApiUtils().GetWorld());
 
 	// set downloadAmount
-	downloadAmount = uploadedElement > maxStackQty ? maxStackQty : uploadedElement < downloadLimit || downloadLimit == 0 ? uploadedElement : downloadLimit;
+	downloadAmount = uploadedElement > maxStackQty ? maxStackQty : uploadedElement < elementDownloadLimit || elementDownloadLimit == 0 ? uploadedElement : elementDownloadLimit;
 
 	if (parsedCmd.IsValidIndex(1))
 	{
@@ -349,13 +349,13 @@ void DownloadElementCallback(AShooterPlayerController* pc, FString* param, int, 
 		if (uploadedElement <= 0) break;
 
 		// limit reached
-		if (downloadedElement >= downloadLimit)
+		if (elementDownloadLimit!=-1 && downloadedElement >= elementDownloadLimit)
 		{
-			AsaApi::GetApiUtils().SendNotification(pc, FColorList::Orange, ElementTransfer::NotifDisplayTime, ElementTransfer::NotifTextSize, nullptr, ElementTransfer::config["Messages"].value("DownloadLimitMSG", "You have reached server maximum download limit. {0}").c_str(), downloadLimit);
+			AsaApi::GetApiUtils().SendNotification(pc, FColorList::Orange, ElementTransfer::NotifDisplayTime, ElementTransfer::NotifTextSize, nullptr, ElementTransfer::config["Messages"].value("DownloadLimitMSG", "You have reached server maximum download limit. {0}").c_str(), elementDownloadLimit);
 			break;
 		}
 
-		// remaining reached
+		// remaining uploade limit reached
 		if (remainingToBeDownload <= 0) break;
 
 		if (UpdateElementDB(pc->GetEOSId(), downloadAmount))
@@ -391,7 +391,7 @@ void DownloadElementCallback(AShooterPlayerController* pc, FString* param, int, 
 
 		if (ElementTransfer::config["Debug"].value("ElementTransfer", false) == true)
 		{
-			Log::GetLog()->info("Player {} downloaded element {}/{} on Map {} {}", pc->GetCharacterName().ToString(), downloadedElement, downloadLimit, mapName.ToString(), __FUNCTION__);
+			Log::GetLog()->info("Player {} downloaded element {}/{} on Map {} {}", pc->GetCharacterName().ToString(), downloadedElement, elementDownloadLimit, mapName.ToString(), __FUNCTION__);
 		}
 
 		int elementRemainingDB = CheckUploadedDB(pc->GetEOSId());
@@ -400,7 +400,7 @@ void DownloadElementCallback(AShooterPlayerController* pc, FString* param, int, 
 		// discord report
 		if (command.value("NotifDiscord", false) == true)
 		{
-			std::string msg = fmt::format(ElementTransfer::config["DiscordBot"]["Messages"].value("DownloadMSG", "Player {0} downloaded element {1}/{2} on Map {3}").c_str(), pc->GetCharacterName().ToString(), downloadedElement, downloadLimit, mapName.ToString());
+			std::string msg = fmt::format(ElementTransfer::config["DiscordBot"]["Messages"].value("DownloadMSG", "Player {0} downloaded element {1}/{2} on Map {3}").c_str(), pc->GetCharacterName().ToString(), downloadedElement, elementDownloadLimit, mapName.ToString());
 
 			SendMessageToDiscord(msg);
 		}
