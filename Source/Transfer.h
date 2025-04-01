@@ -375,6 +375,7 @@ void DownloadElementCallback(AShooterPlayerController* pc, FString* param, int, 
 			downloadAmount = downloadAmount > maxStackQty ? maxStackQty : downloadAmount;
 			Log::GetLog()->warn("1downloadAmount {}", downloadAmount);
 		}
+		// param specified
 		else
 		{
 			downloadAmount = uploadedElement > downloadAmount ? downloadAmount : uploadedElement > maxStackQty ? maxStackQty : uploadedElement;
@@ -383,7 +384,7 @@ void DownloadElementCallback(AShooterPlayerController* pc, FString* param, int, 
 
 		
 
-		int totalDownloadAmount = downloadAmount - uploadedElement;
+		int totalDownloadAmount = uploadedElement - downloadAmount;
 		
 		if (UpdateElementDB(pc->GetEOSId(), totalDownloadAmount))
 		{
