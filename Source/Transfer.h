@@ -126,7 +126,7 @@ void UploadElementCallback(AShooterPlayerController* pc, FString* param, int, in
 		// check while looping
 		uploadedElement = CheckUploadedDB(pc->GetEOSId());
 
-		int uploadAvailableLimit = uploadedElement - elementUploadLimit;
+		int uploadAvailableLimit = std::abs(uploadedElement - elementUploadLimit);
 		
 		// limit reached
 		if (uploadAvailableLimit <= 0)
