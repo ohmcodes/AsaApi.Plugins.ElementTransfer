@@ -1,5 +1,16 @@
 # AsaApi.Plugins.ElementTransfer
-ARK:SA ServerAPI Plugin that support Element Transfer between clusters
+ARK:SA ServerAPI Plugin which can upload/download element between server cluster with permission and points as currency also added some restrictions like Allow/Disallow Transfer if you are not viewing a Terminal/Obilisk or a Drop
+
+# PLEASE ⭐STAR⭐ THE REPO IF YOU LIKE IT! THANKS!
+
+Video Tutorials
+- [Part 1](https://youtu.be/TUytYFxEE5E)
+- [Part 2](https://youtu.be/kiE3Tox-goU)
+- [Part 3](https://youtu.be/epirW-iJ8_k)
+- [Part 4](https://youtu.be/WPrzums88P0)
+- [Part 5](https://youtu.be/O8z8W5KaKtI)
+- [Part 6](https://youtu.be/v_4HF065vno)
+- [Part 7](https://youtu.be/rQdrUQjGCMg)
 
 # Requirements
 - ServerAPI [Download/Install](https://github.com/ArkServerApi/AsaApi)
