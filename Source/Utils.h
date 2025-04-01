@@ -479,4 +479,6 @@ void LoadDatabase()
 		ElementTransfer::pointsDB = DatabaseFactory::createConnector(ElementTransfer::config["PointsDBSettings"]);
 	}
 	
+
+	Log::GetLog()->warn("Database loaded");
 }
