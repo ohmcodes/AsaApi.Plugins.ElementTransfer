@@ -129,8 +129,13 @@ void UploadElementCallback(AShooterPlayerController* pc, FString* param, int, in
 		}
 
 		int itemQty = item->GetItemQuantity();
+
+		Log::GetLog()->warn("itemQty {}", itemQty);
+
 		// check while looping
 		uploadedElement = CheckUploadedDB(pc->GetEOSId());
+
+		Log::GetLog()->warn("uploadedElement {}", uploadedElement);
 
 		// limit reached
 		if (elementUploadLimit != -1 && uploadedElement > elementUploadLimit)
@@ -143,13 +148,19 @@ void UploadElementCallback(AShooterPlayerController* pc, FString* param, int, in
 		if (!parsedCmd.IsValidIndex(1))
 		{
 			uploadAmount = itemQty;
+
+			Log::GetLog()->warn("1uploadAmount {}", uploadAmount);
 		}
 		else
 		{
 			uploadAmount = uploadAmount > itemQty ? itemQty : uploadAmount;
+
+			Log::GetLog()->warn("2uploadAmount {}", uploadAmount);
 		}
 
 		int totalUploadAmount = uploadAmount + uploadedElement;
+
+		Log::GetLog()->warn("totalUploadAmount {}", totalUploadAmount);
 
 		// upload
 		if (CreateOrUpdateElementDB(pc->GetEOSId(), totalUploadAmount))
