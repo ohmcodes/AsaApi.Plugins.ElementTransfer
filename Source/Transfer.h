@@ -373,6 +373,8 @@ void DownloadElementCallback(AShooterPlayerController* pc, FString* param, int, 
 	int iterCount = 0;
 	iterCount = static_cast<int>(ceil(itDec));
 
+	Log::GetLog()->warn("Goes here");
+
 	for (int i = 0; i < iterCount; i++)
 	{
 		if (emptySlot - 7 <= 0)
