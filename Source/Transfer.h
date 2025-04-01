@@ -95,7 +95,7 @@ void UploadElementCallback(AShooterPlayerController* pc, FString* param, int, in
 	{
 		remainingToBeUpload = std::abs(uploadedElement - elementUploadLimit);
 	}
-
+	
 	TArray<UPrimalItem*> itemForRemoval;
 	TArray<UPrimalItem*> items = invComp->InventoryItemsField();
 
