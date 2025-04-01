@@ -86,7 +86,7 @@ void UploadElementCallback(AShooterPlayerController* pc, FString* param, int, in
 		if (item->bIsEngram().Get() || item->IsItemSkin(false)
 			|| !item->DescriptiveNameBaseField().Contains("Element"))
 		{
-			Log::GetLog()->info("Item Invalid {}", item->DescriptiveNameBaseField().ToString());
+			Log::GetLog()->info("Item Invalid {} isEngram {} isItemSkin {} desc not element: {}", item->DescriptiveNameBaseField().ToString(), item->bIsEngram().Get(), item->IsItemSkin(false), !item->DescriptiveNameBaseField().Contains("Element"));
 			continue;
 		}
 
