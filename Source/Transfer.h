@@ -297,9 +297,6 @@ void DownloadElementCallback(AShooterPlayerController* pc, FString* param, int, 
 		return;
 	}
 
-	// execute
-	int elementDownloadLimit = command.value("LimitDownloadCount", 0);
-
 	int uploadedElement = CheckUploadedDB(pc->GetEOSId());
 
 	// no element
@@ -331,51 +328,20 @@ void DownloadElementCallback(AShooterPlayerController* pc, FString* param, int, 
 		return;
 	}
 
-	int downloadAmount = 0;
+	int downloadAmount = uploadedElement;
 	int downloadedElement = 0;
-	int remainingToBeDownload = 0;
+	int remainingToBeDownload = uploadedElement;
 
 	TArray<FString> parsedCmd;
 	param->ParseIntoArray(parsedCmd, L" ", false);
 
-	// limit reached
-	if (elementDownloadLimit!=-1 && downloadedElement >= elementDownloadLimit)
+	if (parsedCmd.IsValidIndex(1))
 	{
-		AsaApi::GetApiUtils().SendNotification(pc, FColorList::Orange, ElementTransfer::NotifDisplayTime, ElementTransfer::NotifTextSize, nullptr, ElementTransfer::config["Messages"].value("DownloadLimitMSG", "You have reached server maximum download limit. {0}").c_str(), elementDownloadLimit);
-		return;
+		downloadAmount = std::atoi(parsedCmd[1].ToString().c_str());
+		remainingToBeDownload = downloadAmount;
 	}
 
 	int maxStackQty = element->GetMaxItemQuantity(AsaApi::GetApiUtils().GetWorld());
-
-	// no limit
-	if (elementDownloadLimit != -1)
-	{
-		// set downloadAmount
-		downloadAmount = uploadedElement > maxStackQty ? maxStackQty : uploadedElement;
-
-		remainingToBeDownload = uploadedElement;
-		Log::GetLog()->warn("no limit downloadAmount {}", downloadAmount);
-	}
-	else
-	{
-		downloadAmount = uploadedElement > elementDownloadLimit ? elementDownloadLimit : uploadedElement;
-
-		remainingToBeDownload = downloadAmount;
-		Log::GetLog()->warn("with limit elementDownloadLimit {}", elementDownloadLimit);
-	}
-
-	if (parsedCmd.IsValidIndex(1))
-	{
-		int prefferedDownloadAmount = std::atoi(parsedCmd[1].ToString().c_str());
-
-		downloadAmount = downloadAmount > prefferedDownloadAmount ? prefferedDownloadAmount : downloadAmount;
-
-
-	}
-
-	
-
-	
 
 	// how many loop needed
 	float itDec = static_cast<float>(downloadAmount) / static_cast<float>(maxStackQty);
@@ -397,19 +363,12 @@ void DownloadElementCallback(AShooterPlayerController* pc, FString* param, int, 
 		// no more element
 		if (uploadedElement <= 0) break;
 
-		// limit reached
-		if (elementDownloadLimit!=-1 && downloadedElement >= elementDownloadLimit)
-		{
-			AsaApi::GetApiUtils().SendNotification(pc, FColorList::Orange, ElementTransfer::NotifDisplayTime, ElementTransfer::NotifTextSize, nullptr, ElementTransfer::config["Messages"].value("DownloadLimitMSG", "You have reached server maximum download limit. {0}").c_str(), elementDownloadLimit);
-			break;
-		}
-
-		// remaining uploade limit reached
+		// remaining upload checks until param reached
 		if (remainingToBeDownload <= 0) break;
 
-		Log::GetLog()->warn("Goes here");
+		//Log::GetLog()->warn("Goes here");
 
-		int totaldownloadAmount = std::abs(downloadAmount - uploadedElement);
+		int totaldownloadAmount = downloadAmount - uploadedElement;
 		
 		if (UpdateElementDB(pc->GetEOSId(), totaldownloadAmount))
 		{
@@ -444,7 +403,7 @@ void DownloadElementCallback(AShooterPlayerController* pc, FString* param, int, 
 
 		if (ElementTransfer::config["Debug"].value("ElementTransfer", false) == true)
 		{
-			Log::GetLog()->info("Player {} downloaded element {}/{} on Map {} {}", pc->GetCharacterName().ToString(), downloadedElement, elementDownloadLimit, mapName.ToString(), __FUNCTION__);
+			Log::GetLog()->info("Player {} downloaded element {} on Map {} {}", pc->GetCharacterName().ToString(), downloadedElement, mapName.ToString(), __FUNCTION__);
 		}
 
 		int elementRemainingDB = CheckUploadedDB(pc->GetEOSId());
@@ -453,7 +412,7 @@ void DownloadElementCallback(AShooterPlayerController* pc, FString* param, int, 
 		// discord report
 		if (command.value("NotifDiscord", false) == true)
 		{
-			std::string msg = fmt::format(ElementTransfer::config["DiscordBot"]["Messages"].value("DownloadMSG", "Player {0} downloaded element {1}/{2} on Map {3}").c_str(), pc->GetCharacterName().ToString(), downloadedElement, elementDownloadLimit, mapName.ToString());
+			std::string msg = fmt::format(ElementTransfer::config["DiscordBot"]["Messages"].value("DownloadMSG", "Player {0} downloaded element {1} on Map {3}").c_str(), pc->GetCharacterName().ToString(), downloadedElement, mapName.ToString());
 
 			SendMessageToDiscord(msg);
 		}
