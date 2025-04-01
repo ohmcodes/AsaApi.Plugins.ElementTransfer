@@ -352,10 +352,16 @@ void DownloadElementCallback(AShooterPlayerController* pc, FString* param, int, 
 	{
 		// set downloadAmount
 		downloadAmount = uploadedElement > maxStackQty ? maxStackQty : uploadedElement;
+
+		remainingToBeDownload = uploadedElement;
+		Log::GetLog()->warn("no limit downloadAmount {}", downloadAmount);
 	}
 	else
 	{
 		downloadAmount = uploadedElement > elementDownloadLimit ? elementDownloadLimit : uploadedElement;
+
+		remainingToBeDownload = downloadAmount;
+		Log::GetLog()->warn("with limit downloadAmount {}", downloadAmount);
 	}
 
 	if (parsedCmd.IsValidIndex(1))
@@ -363,11 +369,13 @@ void DownloadElementCallback(AShooterPlayerController* pc, FString* param, int, 
 		int prefferedDownloadAmount = std::atoi(parsedCmd[1].ToString().c_str());
 
 		downloadAmount = downloadAmount > prefferedDownloadAmount ? prefferedDownloadAmount : downloadAmount;
+
+
 	}
 
-	remainingToBeDownload = downloadAmount;
+	
 
-	Log::GetLog()->warn("downloadAmount {}", downloadAmount);
+	
 
 	// how many loop needed
 	float itDec = static_cast<float>(downloadAmount) / static_cast<float>(maxStackQty);
