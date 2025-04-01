@@ -8,7 +8,7 @@ void UploadElementCallback(AShooterPlayerController* pc, FString* param, int, in
 	if (pc->GetPlayerCharacter()->IsDead()) return;
 
 	// Check Trigger interval
-	if (ElementTransfer::uploadCooldown != 0 || ElementTransfer::counter >= ElementTransfer::uploadCooldown)
+	if (ElementTransfer::uploadCooldown != 0 && ElementTransfer::counter >= ElementTransfer::uploadCooldown)
 	{
 		if (ElementTransfer::config["Debug"].value("ElementTransfer", false) == true)
 		{
@@ -181,7 +181,7 @@ void DownloadElementCallback(AShooterPlayerController* pc, FString* param, int, 
 		Log::GetLog()->warn("Function: {}", __FUNCTION__);
 
 	// Check Trigger interval
-	if (ElementTransfer::downloadCooldown != 0 || ElementTransfer::counter >= ElementTransfer::downloadCooldown)
+	if (ElementTransfer::downloadCooldown != 0 && ElementTransfer::counter >= ElementTransfer::downloadCooldown)
 	{
 		if (ElementTransfer::config["Debug"].value("ElementTransfer", false) == true)
 		{
@@ -386,7 +386,7 @@ void CheckElementUploadedCallback(AShooterPlayerController* pc, FString*, int, i
 		Log::GetLog()->warn("Function: {}", __FUNCTION__);
 
 	// Check Trigger interval
-	if (ElementTransfer::checkUploadedCooldown != 0 || ElementTransfer::counter >= ElementTransfer::checkUploadedCooldown)
+	if (ElementTransfer::checkUploadedCooldown != 0 && ElementTransfer::counter >= ElementTransfer::checkUploadedCooldown)
 	{
 		if (ElementTransfer::config["Debug"].value("ElementTransfer", false) == true)
 		{
@@ -466,13 +466,13 @@ void CheckElementUploadedCallback(AShooterPlayerController* pc, FString*, int, i
 	ElementTransfer::checkUploadedCooldown = ElementTransfer::counter + command.value("TriggerInterval", 60);
 }
 
-void CheckLimitCallback(AShooterPlayerController* pc, FString*, int, int)
+void CheckDownloadLimitCallback(AShooterPlayerController* pc, FString*, int, int)
 {
 	if(ElementTransfer::isDebug)
 		Log::GetLog()->warn("Function: {}", __FUNCTION__);
 
 	// Check Trigger interval
-	if (ElementTransfer::checkLimitCooldown != 0 || ElementTransfer::counter >= ElementTransfer::checkLimitCooldown)
+	if (ElementTransfer::checkLimitCooldown != 0 && ElementTransfer::counter >= ElementTransfer::checkLimitCooldown)
 	{
 		if (ElementTransfer::config["Debug"].value("ElementTransfer", false) == true)
 		{
@@ -486,7 +486,93 @@ void CheckLimitCallback(AShooterPlayerController* pc, FString*, int, int)
 
 	// permissions check
 	FString perms = GetPriorPermByEOSID(pc->GetEOSId());
-	nlohmann::json command = GetCommandString(perms.ToString(), "CheckLimitCMD");
+	nlohmann::json command = GetCommandString(perms.ToString(), "CheckDownloadLimitCMD");
+
+	if (command.is_null() || (!command.is_null() && command.value("Enabled", false) == false))
+	{
+		if (ElementTransfer::config["Debug"].value("Permissions", false) == true)
+		{
+			Log::GetLog()->info("{} No permissions. Command: {}", pc->GetCharacterName().ToString(), __FUNCTION__);
+		}
+
+		AsaApi::GetApiUtils().SendNotification(pc, FColorList::Red, ElementTransfer::NotifDisplayTime, ElementTransfer::NotifTextSize, nullptr, ElementTransfer::config["Messages"].value("RepairItemsPermErrorMSG", "You don't have permission to use this command.").c_str());
+
+		return;
+	}
+
+	// points checking
+	if (Points(pc->GetEOSId(), command.value("Cost", 0), true) == false)
+	{
+		if (ElementTransfer::config["Debug"].value("Points", false) == true)
+		{
+			Log::GetLog()->info("{} don't have points. Command: {}", pc->GetCharacterName().ToString(), __FUNCTION__);
+		}
+
+		AsaApi::GetApiUtils().SendNotification(pc, FColorList::Red, ElementTransfer::NotifDisplayTime, ElementTransfer::NotifTextSize, nullptr, ElementTransfer::config["Messages"].value("PointsErrorMSG", "Not enough points.").c_str());
+
+		return;
+	}
+
+	// execute
+	bool success = false;
+	int elementDownloadLimit = 0;
+
+	nlohmann::json uploadCMD = GetCommandString(perms.ToString(), "DownloadCMD");
+	if (!uploadCMD.is_null())
+	{
+		elementDownloadLimit = command.value("LimitDownloadCount", 0);
+	}
+
+	success = true;
+
+	// notif results
+	if (success)
+	{
+		// points deductions
+		Points(pc->GetEOSId(), command.value("Cost", 0));
+
+		if (ElementTransfer::config["Debug"].value("ElementTransfer", false) == true)
+		{
+			Log::GetLog()->info("{} check element upload limit {} {}", pc->GetCharacterName().ToString(), elementDownloadLimit, __FUNCTION__);
+		}
+
+		AsaApi::GetApiUtils().SendNotification(pc, FColorList::Green, ElementTransfer::NotifDisplayTime, ElementTransfer::NotifTextSize, nullptr, ElementTransfer::config["Messages"].value("CheckDownloadLimitMSG", "Your current element upload limit {0}").c_str(), elementDownloadLimit);
+	}
+
+	// discord report
+	if (command.value("NotifDiscord", false) == true)
+	{
+		std::string msg = fmt::format(ElementTransfer::config["DiscordBot"]["Messages"].value("CheckDownloadLimitMSG", "{0} check element download limit {1}").c_str(), pc->GetCharacterName().ToString(), elementDownloadLimit);
+
+		SendMessageToDiscord(msg);
+	}
+	
+
+	// refresh command cooldown
+	ElementTransfer::checkLimitCooldown = ElementTransfer::counter + command.value("TriggerInterval", 60);
+}
+
+void CheckUploadLimitCallback(AShooterPlayerController* pc, FString*, int, int)
+{
+	if (ElementTransfer::isDebug)
+		Log::GetLog()->warn("Function: {}", __FUNCTION__);
+
+	// Check Trigger interval
+	if (ElementTransfer::checkLimitCooldown != 0 && ElementTransfer::counter >= ElementTransfer::checkLimitCooldown)
+	{
+		if (ElementTransfer::config["Debug"].value("ElementTransfer", false) == true)
+		{
+			Log::GetLog()->info("{} Still cooldown: {}", pc->GetCharacterName().ToString(), __FUNCTION__);
+		}
+
+		AsaApi::GetApiUtils().SendNotification(pc, FColorList::Yellow, ElementTransfer::NotifDisplayTime, ElementTransfer::NotifTextSize, nullptr, "Command is cooldown, try again later.");
+
+		return;
+	}
+
+	// permissions check
+	FString perms = GetPriorPermByEOSID(pc->GetEOSId());
+	nlohmann::json command = GetCommandString(perms.ToString(), "CheckUploadLimitCMD");
 
 	if (command.is_null() || (!command.is_null() && command.value("Enabled", false) == false))
 	{
@@ -536,17 +622,17 @@ void CheckLimitCallback(AShooterPlayerController* pc, FString*, int, int)
 			Log::GetLog()->info("{} check element upload limit {} {}", pc->GetCharacterName().ToString(), elementUploadLimit, __FUNCTION__);
 		}
 
-		AsaApi::GetApiUtils().SendNotification(pc, FColorList::Green, ElementTransfer::NotifDisplayTime, ElementTransfer::NotifTextSize, nullptr, ElementTransfer::config["Messages"].value("CheckLimitMSG", "Your current element upload limit {0}").c_str(), elementUploadLimit);
+		AsaApi::GetApiUtils().SendNotification(pc, FColorList::Green, ElementTransfer::NotifDisplayTime, ElementTransfer::NotifTextSize, nullptr, ElementTransfer::config["Messages"].value("CheckUploadLimitMSG", "Your current element upload limit {0}").c_str(), elementUploadLimit);
 	}
 
 	// discord report
 	if (command.value("NotifDiscord", false) == true)
 	{
-		std::string msg = fmt::format(ElementTransfer::config["DiscordBot"]["Messages"].value("DiscordCheckLimitMSG", "{0} check element upload limit {1}").c_str(), pc->GetCharacterName().ToString(), elementUploadLimit);
+		std::string msg = fmt::format(ElementTransfer::config["DiscordBot"]["Messages"].value("CheckUploadLimitMSG", "{0} check element upload limit {1}").c_str(), pc->GetCharacterName().ToString(), elementUploadLimit);
 
 		SendMessageToDiscord(msg);
 	}
-	
+
 
 	// refresh command cooldown
 	ElementTransfer::checkLimitCooldown = ElementTransfer::counter + command.value("TriggerInterval", 60);

@@ -41,16 +41,29 @@ void AddOrRemoveCommands(bool addCmd = true)
 		}
 	}
 
-	const FString CheckLimit = ElementTransfer::config["Commands"]["CheckLimitCMD"].get<std::string>().c_str();
-	if (!CheckLimit.IsEmpty())
+	const FString CheckDownloadLimit = ElementTransfer::config["Commands"]["CheckDownloadLimitCMD"].get<std::string>().c_str();
+	if (!CheckDownloadLimit.IsEmpty())
 	{
 		if (addCmd)
 		{
-			AsaApi::GetCommands().AddChatCommand(CheckLimit, &CheckLimitCallback);
+			AsaApi::GetCommands().AddChatCommand(CheckDownloadLimit, &CheckDownloadLimitCallback);
 		}
 		else
 		{
-			AsaApi::GetCommands().RemoveChatCommand(CheckLimit);
+			AsaApi::GetCommands().RemoveChatCommand(CheckDownloadLimit);
+		}
+	}
+
+	const FString CheckUploadLimit = ElementTransfer::config["Commands"]["CheckUploadLimitCMD"].get<std::string>().c_str();
+	if (!CheckUploadLimit.IsEmpty())
+	{
+		if (addCmd)
+		{
+			AsaApi::GetCommands().AddChatCommand(CheckUploadLimit, &CheckUploadLimitCallback);
+		}
+		else
+		{
+			AsaApi::GetCommands().RemoveChatCommand(CheckUploadLimit);
 		}
 	}
 }
