@@ -1,22 +1,24 @@
 {
   "General": {
-    "NotifDisplayTime": 3,
+    "NotifDisplayTime": 15.0,
     "NotifTextSize": 1.3,
     "ElementBPCheck": [
       "Blueprint'/Game/PrimalEarth/CoreBlueprints/Resources/PrimalItemResource_Element.PrimalItemResource_Element'",
       "Blueprint'/Game/PrimalEarth/CoreBlueprints/Resources/PrimalItemResource_ElementPowerNode.PrimalItemResource_ElementPowerNode'"
+        // add more data here if you have modded element
     ],
     "ElementBP": "Blueprint'/Game/PrimalEarth/CoreBlueprints/Resources/PrimalItemResource_Element.PrimalItemResource_Element'"
+      // set your desired downloaded element default: vanilla
   },
   "Debug": {
-    "ElementTransfer": true,
-    "Permissions": true,
-    "Points": true
+    "ElementTransfer": false,
+    "Permissions": false,
+    "Points": false
   },
   "Commands": {
-    "UploadCMD": "/upload",
-    "DownloadCMD": "/download",
-    "CheckUploadedCMD": "/check",
+    "UploadCMD": "/upload", // will allow player to set parameters eg: /upload 50
+    "DownloadCMD": "/download", // will allow player to set parameters eg: /upload 50
+    "CheckUploadedCMD": "/checkupload",
     "CheckLimitCMD": "/checklimit"
   },
   "Messages": {
@@ -27,7 +29,6 @@
     "UploadMSG": "{0} Elements has been uploaded",
     "DownloadMsg": "{0} Elements succesfuly downloaded. {1} remaining",
     "UploadLimitMSG": "You have reached server maximum upload limit. {0}",
-    "DownloadLimitMSG": "You have reached server maximum download limit. {0}",
     "NoElementMSG": "No uploaded element",
     "NoAvailableSlotMSG": "No available slot.",
     "TerminalRequiredMSG": "Find nearest upload/download terminal",
@@ -42,8 +43,8 @@
     "BotUsername": "ElementTransfer",
     "DiscordEmbedTemplate": "",
     "Messages": {
-      "UploadMSG": "Player {0} uploaded element {1}/{2} Map: {3}",
-      "DownloadMSG": "Player {0} downloaded element {1}/{2} on Map {3}",
+      "UploadMSG": "Player {0} uploaded element {1} Map: {2}",
+      "DownloadMSG": "Player {0} downloaded element {1} on Map {2}",
       "CheckUploadedMSG": "{0} has {1}/{2} uploaded element",
       "CheckLimitMSG": "{0} check element upload limit {1}"
     }
@@ -103,9 +104,8 @@
           "Cost": 50,
           "NotifDiscord": true,
           "AllowUploadAnywhere": true,
-          "AllowAutomaticDownload": false,
-          "LimitUploadCount": 100,
-          "TriggerInterval": 60
+          "LimitUploadCount": -1, // -1 for no limit. 0 and more will set limit
+          "TriggerInterval": 0 // cooldown
         },
         "DownloadCMD": {
           "Enabled": true,
@@ -113,21 +113,19 @@
           "NotifDiscord": true,
           "AllowDownloadAnywhere": true,
           "AllowDownloadSameMap": true,
-          "AutomaticDownloadTimer": 5,
-          "LimitDownloadCount": 0,
-          "TriggerInterval": 60
+          "TriggerInterval": 0 // cooldown
         },
         "CheckUploadedCMD": {
           "Enabled": true,
           "Cost": 0,
           "NotifDiscord": true,
-          "TriggerInterval": 60
+          "TriggerInterval": 0 // cooldown
         },
         "CheckLimitCMD": {
           "Enabled": true,
           "Cost": 0,
           "NotifDiscord": true,
-          "TriggerInterval": 60
+          "TriggerInterval": 0 // cooldown
         }
       }
     }
