@@ -373,13 +373,15 @@ void DownloadElementCallback(AShooterPlayerController* pc, FString* param, int, 
 		if (!parsedCmd.IsValidIndex(1))
 		{
 			downloadAmount = downloadAmount > maxStackQty ? maxStackQty : downloadAmount;
+			Log::GetLog()->warn("1downloadAmount {}", downloadAmount);
 		}
 		else
 		{
 			downloadAmount = uploadedElement > downloadAmount ? downloadAmount : uploadedElement > maxStackQty ? maxStackQty : uploadedElement;
+			Log::GetLog()->warn("2downloadAmount {}", downloadAmount);
 		}
 
-		//Log::GetLog()->warn("Goes here");
+		
 
 		int totalDownloadAmount = downloadAmount - uploadedElement;
 		
