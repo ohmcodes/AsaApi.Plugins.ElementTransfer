@@ -14,7 +14,7 @@ void AddOrRemoveCommands(bool addCmd = true)
 			AsaApi::GetCommands().RemoveChatCommand(UploadElement);
 		}
 	}
-
+	
 	const FString DownloadElement = ElementTransfer::config["Commands"]["DownloadCMD"].get<std::string>().c_str();
 	if (!DownloadElement.IsEmpty())
 	{
