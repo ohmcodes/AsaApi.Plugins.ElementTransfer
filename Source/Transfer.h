@@ -520,7 +520,7 @@ void CheckDownloadLimitCallback(AShooterPlayerController* pc, FString*, int, int
 	nlohmann::json uploadCMD = GetCommandString(perms.ToString(), "DownloadCMD");
 	if (!uploadCMD.is_null())
 	{
-		elementDownloadLimit = command.value("LimitDownloadCount", 0);
+		elementDownloadLimit = uploadCMD.value("LimitDownloadCount", 0);
 	}
 
 	success = true;
@@ -606,7 +606,7 @@ void CheckUploadLimitCallback(AShooterPlayerController* pc, FString*, int, int)
 	nlohmann::json uploadCMD = GetCommandString(perms.ToString(), "UploadCMD");
 	if (!uploadCMD.is_null())
 	{
-		elementUploadLimit = command.value("LimitUploadCount", 0);
+		elementUploadLimit = uploadCMD.value("LimitUploadCount", 0);
 	}
 
 	success = true;
