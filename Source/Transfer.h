@@ -79,6 +79,9 @@ void UploadElementCallback(AShooterPlayerController* pc, FString* param, int, in
 		return;
 	}
 
+	if (!ElementTransfer::ElementClass)
+		ElementTransfer::ElementClass = UVictoryCore::BPLoadClass(FString(ElementTransfer::config["General"].value("ElementBP", "Blueprint'/Game/PrimalEarth/CoreBlueprints/Resources/PrimalItemResource_Element.PrimalItemResource_Element'")));
+
 	UPrimalItem* element = static_cast<UPrimalItem*>(ElementTransfer::ElementClass->GetDefaultObject(true));
 
 	if (!element) return;
@@ -133,8 +136,6 @@ void UploadElementCallback(AShooterPlayerController* pc, FString* param, int, in
 			//Log::GetLog()->info("Not match in BP {}", item->DescriptiveNameBaseField().ToString());
 			continue;
 		}
-
-		
 
 		int itemQty = item->GetItemQuantity();
 		// check while looping
