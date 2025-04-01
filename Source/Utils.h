@@ -264,7 +264,12 @@ bool MatchBlueprintClass(UPrimalItem* item)
 
 	FString itemBP = AsaApi::GetApiUtils().GetItemBlueprint(item);
 
-	return std::find(configBP.begin(), configBP.end(), itemBP) != configBP.end() ? false : true;
+	for (std::string cBP : configBP)
+	{
+		if (itemBP.Equals(FString(cBP))) return true;
+	}
+
+	return false;
 }
 
 bool CheckSameMap(FString eos_id, FString mapname)
