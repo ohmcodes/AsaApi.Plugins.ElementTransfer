@@ -83,7 +83,8 @@ void UploadElementCallback(AShooterPlayerController* pc, FString* param, int, in
 
 	for (UPrimalItem* item : invComp->InventoryItemsField())
 	{
-		if (item->bIsEngram().Get() && item->IsItemSkin(false) && !item->DescriptiveNameBaseField().Contains("Element")) continue;
+		if (item->bIsEngram().Get() || item->IsItemSkin(false)
+	|| !item->DescriptiveNameBaseField().Contains("Element")) continue;
 
 		if (!MatchBlueprintClass(item))
 		{
