@@ -444,23 +444,21 @@ void LoadDatabase()
 	if (ElementTransfer::config["PluginDBSettings"].value("UseMySQL", true) == true)
 	{
 		tableDefinition = {
-			{"Id", "INT NOT NULL AUTO_INCREMENT"},
-			{"EosId", "VARCHAR(50) NOT NULL"},
-			{"PlayerId", "VARCHAR(50) NOT NULL"},
-			{"PlayerName", "VARCHAR(50) NOT NULL"},
-			{"CreateAt", "DATETIME DEFAULT CURRENT_TIMESTAMP"},
-			{"PRIMARY", "KEY(Id)"},
-			{"UNIQUE", "INDEX EosId_UNIQUE (EosId ASC)"}
+		   {"Id", "INT NOT NULL AUTO_INCREMENT"},
+		   {"EosId", "VARCHAR(50) NOT NULL"},
+		   {"Amount", "INT NOT NULL"},
+		   {"MapName", "VARCHAR(50) NOT NULL"},
+		   {"PRIMARY", "KEY(Id)"},
+		   {"UNIQUE", "INDEX EosId_UNIQUE (EosId ASC)"}
 		};
 	}
 	else
 	{
 		tableDefinition = {
-			{"Id","INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT"},
-			{"EosId","TEXT NOT NULL UNIQUE"},
-			{"PlayerId","TEXT"},
-			{"PlayerName","TEXT"},
-			{"CreateAt","TIMESTAMP DEFAULT CURRENT_TIMESTAMP"}
+			{"id", "INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL"},
+			{"EosId", "TEXT NOT NULL UNIQUE"},
+			{"Amount", "INTEGER"},
+			{"MapName", "TEXT NOT NULL UNIQUE"}
 		};
 	}
 
