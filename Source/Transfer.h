@@ -80,24 +80,25 @@ void UploadElementCallback(AShooterPlayerController* pc, FString* param, int, in
 	}
 
 	TArray<UPrimalItem*> itemForRemoval;
+	TArray<UPrimalItem*> items = invComp->InventoryItemsField();
 
-	for (UPrimalItem* item : invComp->InventoryItemsField())
+	for (UPrimalItem* item : items)
 	{
 		if (item->bIsEngram().Get())
 		{
-			Log::GetLog()->info("Item Invalid {} isEngram {}", item->DescriptiveNameBaseField().ToString(), item->bIsEngram().Get());
+			Log::GetLog()->info("{} isEngram {}", item->DescriptiveNameBaseField().ToString(), item->bIsEngram().Get());
 			continue;
 		}
 
 		if (item->IsItemSkin(false))
 		{
-			Log::GetLog()->info("Item Invalid {} isItemSkin {}", item->DescriptiveNameBaseField().ToString(), item->IsItemSkin(false));
+			Log::GetLog()->info("{} isItemSkin {}", item->DescriptiveNameBaseField().ToString(), item->IsItemSkin(false));
 			continue;
 		}
 
 		if (!item->DescriptiveNameBaseField().Contains("Element"))
 		{
-			Log::GetLog()->info("Item Invalid {} desc not element: {}", !item->DescriptiveNameBaseField().Contains("Element"));
+			Log::GetLog()->info("{} desc not element: {}", !item->DescriptiveNameBaseField().Contains("Element"));
 			continue;
 		}
 
