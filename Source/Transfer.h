@@ -308,7 +308,7 @@ void DownloadElementCallback(AShooterPlayerController* pc, FString* param, int, 
 	param->ParseIntoArray(parsedCmd, L" ", false);
 
 	// limit reached
-	if (downloadLimit!=0 && downloadedElement >= downloadLimit)
+	if (downloadedElement >= downloadLimit)
 	{
 		AsaApi::GetApiUtils().SendNotification(pc, FColorList::Orange, ElementTransfer::NotifDisplayTime, ElementTransfer::NotifTextSize, nullptr, ElementTransfer::config["Messages"].value("DownloadLimitMSG", "You have reached server maximum download limit. {0}").c_str(), downloadLimit);
 		return;
