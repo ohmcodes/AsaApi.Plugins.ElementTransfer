@@ -84,7 +84,7 @@ void UploadElementCallback(AShooterPlayerController* pc, FString* param, int, in
 
 	for (UPrimalItem* item : items)
 	{
-		if (item->ClassPrivateField() && item->bAllowRemovalFromInventory().Get())
+		if (!item->ClassPrivateField() || !item->bAllowRemovalFromInventory().Get())
 		{
 			Log::GetLog()->info("Item is Invalid {}", item->DescriptiveNameBaseField().ToString());
 			continue;
