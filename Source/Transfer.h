@@ -84,6 +84,12 @@ void UploadElementCallback(AShooterPlayerController* pc, FString* param, int, in
 
 	for (UPrimalItem* item : items)
 	{
+		if (item->ClassPrivateField() && item->bAllowRemovalFromInventory().Get())
+		{
+			Log::GetLog()->info("Item is Invalid {}", item->DescriptiveNameBaseField().ToString());
+			continue;
+		}
+
 		if (item->bIsEngram().Get())
 		{
 			Log::GetLog()->info("{} isEngram {}", item->DescriptiveNameBaseField().ToString(), item->bIsEngram().Get());
