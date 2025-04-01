@@ -338,6 +338,9 @@ void DownloadElementCallback(AShooterPlayerController* pc, FString* param, int, 
 	if (parsedCmd.IsValidIndex(1))
 	{
 		downloadAmount = std::atoi(parsedCmd[1].ToString().c_str());
+
+		Log::GetLog()->warn("downloadAmount {}", downloadAmount);
+
 		remainingToBeDownload = downloadAmount;
 	}
 
@@ -365,6 +368,16 @@ void DownloadElementCallback(AShooterPlayerController* pc, FString* param, int, 
 
 		// remaining upload checks until param reached
 		if (remainingToBeDownload <= 0) break;
+
+		// param not specified
+		if (!parsedCmd.IsValidIndex(1))
+		{
+			downloadAmount = downloadAmount > maxStackQty ? maxStackQty : downloadAmount;
+		}
+		else
+		{
+			downloadAmount = uploadedElement > downloadAmount ? downloadAmount : uploadedElement > maxStackQty ? maxStackQty : uploadedElement;
+		}
 
 		//Log::GetLog()->warn("Goes here");
 
