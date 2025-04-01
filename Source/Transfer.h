@@ -65,18 +65,13 @@ void UploadElementCallback(AShooterPlayerController* pc, FString* param, int, in
 		uploadAmount = std::atoi(parsedCmd[1].ToString().c_str());
 	}
 
-	if (command.value("AllowUploadAnywhere", false) == false && !pc->ViewingAnUploadTerminal())
-	{
-		AsaApi::GetApiUtils().SendNotification(pc, FColorList::Orange, ElementTransfer::NotifDisplayTime, ElementTransfer::NotifTextSize, nullptr, ElementTransfer::config["Messages"].value("TerminalRequiredMSG", "Find nearest upload/download terminal").c_str());
-
-		return;
-	}
-
 	UPrimalInventoryComponent* invComp = pc->GetPlayerCharacter()->MyInventoryComponentField();
 
 	if (!invComp) return;
 
 	int uploadedElement = CheckUploadedDB(pc->GetEOSId());
+
+	Log::GetLog()->info("UploadedElement {}", uploadedElement);
 	
 	// limit reached
 	if (uploadedElement >= elementUploadLimit)
