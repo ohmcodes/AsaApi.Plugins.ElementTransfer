@@ -389,7 +389,7 @@ void DownloadElementCallback(AShooterPlayerController* pc, FString* param, int, 
 		// remaining uploade limit reached
 		if (remainingToBeDownload <= 0) break;
 
-		int totaldownloadAmount = downloadAmount - uploadedElement;
+		int totaldownloadAmount = std::abs(downloadAmount - uploadedElement);
 
 		if (UpdateElementDB(pc->GetEOSId(), totaldownloadAmount))
 		{
