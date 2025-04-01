@@ -71,7 +71,6 @@ void UploadElementCallback(AShooterPlayerController* pc, FString* param, int, in
 
 	int uploadedElement = CheckUploadedDB(pc->GetEOSId());
 
-	Log::GetLog()->info("UploadedElement {}", uploadedElement);
 	
 	// limit reached
 	if (uploadedElement >= elementUploadLimit)
@@ -84,7 +83,12 @@ void UploadElementCallback(AShooterPlayerController* pc, FString* param, int, in
 
 	for (UPrimalItem* item : invComp->InventoryItemsField())
 	{
-		if (item->bIsEngram().Get() && item->IsItemSkin(false) && !item->DescriptiveNameBaseField().Contains("Element")) continue;
+		if (item->bIsEngram().Get() && item->IsItemSkin(false) && !item->DescriptiveNameBaseField().Contains("Element"))
+		{
+			Log::GetLog()->info("is engram, isitemskin, not element {}", item->DescriptiveNameBaseField().ToString());
+
+			continue;
+		}
 
 		if (!MatchBlueprintClass(item)) continue;
 
