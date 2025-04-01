@@ -119,8 +119,6 @@ void UploadElementCallback(AShooterPlayerController* pc, FString* param, int, in
 			continue;
 		}
 
-		Log::GetLog()->info("{}", item->DescriptiveNameBaseField().ToString());
-
 		int itemQty = item->GetItemQuantity();
 		// check while looping
 		uploadedElement = CheckUploadedDB(pc->GetEOSId());
@@ -128,7 +126,13 @@ void UploadElementCallback(AShooterPlayerController* pc, FString* param, int, in
 		int uploadAvailableLimit = uploadedElement - elementUploadLimit;
 
 		// limit reached
-		if (uploadAvailableLimit <= 0) break;
+		if (uploadAvailableLimit <= 0)
+		{
+			Log::GetLog()->info("{}", item->DescriptiveNameBaseField().ToString());
+
+			AsaApi::GetApiUtils().SendNotification(pc, FColorList::Orange, ElementTransfer::NotifDisplayTime, ElementTransfer::NotifTextSize, nullptr, ElementTransfer::config["Messages"].value("UploadLimitMSG", "You have reached server maximum upload limit. {0}").c_str(), elementUploadLimit);
+			break;
+		}
 
 		// param not specified
 		if (uploadAmount == 0)
