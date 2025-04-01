@@ -71,9 +71,6 @@ void UploadElementCallback(AShooterPlayerController* pc, FString* param, int, in
 
 	int uploadedElement = CheckUploadedDB(pc->GetEOSId());
 
-	// TODO: Cleanup
-	Log::GetLog()->info("uplaodedlement {}", uploadedElement);
-
 	// limit reached
 	if (uploadedElement >= elementUploadLimit)
 	{
@@ -112,13 +109,13 @@ void UploadElementCallback(AShooterPlayerController* pc, FString* param, int, in
 
 		if (!item->DescriptiveNameBaseField().Contains("Element"))
 		{
-			Log::GetLog()->info("{} desc not element: {}", !item->DescriptiveNameBaseField().Contains("Element"));
+			//Log::GetLog()->info("{} desc not element: {}", !item->DescriptiveNameBaseField().Contains("Element"));
 			continue;
 		}
 
 		if (!MatchBlueprintClass(item))
 		{
-			Log::GetLog()->info("Not match in BP {}", item->DescriptiveNameBaseField().ToString());
+			//Log::GetLog()->info("Not match in BP {}", item->DescriptiveNameBaseField().ToString());
 			continue;
 		}
 
@@ -131,8 +128,6 @@ void UploadElementCallback(AShooterPlayerController* pc, FString* param, int, in
 		// limit reached
 		if (uploadAvailableLimit <= 0)
 		{
-			Log::GetLog()->info("uploadAvailableLimit {}", uploadAvailableLimit);
-
 			AsaApi::GetApiUtils().SendNotification(pc, FColorList::Orange, ElementTransfer::NotifDisplayTime, ElementTransfer::NotifTextSize, nullptr, ElementTransfer::config["Messages"].value("UploadLimitMSG", "You have reached server maximum upload limit. {0}").c_str(), elementUploadLimit);
 			break;
 		}
@@ -313,7 +308,7 @@ void DownloadElementCallback(AShooterPlayerController* pc, FString* param, int, 
 	param->ParseIntoArray(parsedCmd, L" ", false);
 
 	// limit reached
-	if (downloadedElement >= downloadLimit)
+	if (downloadLimit!=0 && downloadedElement >= downloadLimit)
 	{
 		AsaApi::GetApiUtils().SendNotification(pc, FColorList::Orange, ElementTransfer::NotifDisplayTime, ElementTransfer::NotifTextSize, nullptr, ElementTransfer::config["Messages"].value("DownloadLimitMSG", "You have reached server maximum download limit. {0}").c_str(), downloadLimit);
 		return;
