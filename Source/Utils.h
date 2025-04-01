@@ -389,7 +389,7 @@ bool UpdateElementDB(FString eos_id, int amount)
 	{
 		if (ElementTransfer::isDebug)
 		{
-			Log::GetLog()->warn("uploaded element updated db");
+			Log::GetLog()->warn("element updated db");
 		}
 
 		return true;
