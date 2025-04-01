@@ -591,4 +591,4 @@ void CheckLimitCallback(AShooterPlayerController* pc, FString*, int, int)
 
 	// refresh command cooldown
 	ElementTransfer::checkLimitCooldown = ElementTransfer::counter + command.value("TriggerInterval", 60);
-}
+} 
