@@ -391,7 +391,7 @@ void DownloadElementCallback(AShooterPlayerController* pc, FString* param, int, 
 
 		int totaldownloadAmount = downloadAmount - uploadedElement;
 
-		if (UpdateElementDB(pc->GetEOSId(), downloadAmount))
+		if (UpdateElementDB(pc->GetEOSId(), totaldownloadAmount))
 		{
 			UPrimalItem::AddNewItem(
 				ElementTransfer::ElementClass,
