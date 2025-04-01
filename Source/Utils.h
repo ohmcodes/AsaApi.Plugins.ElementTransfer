@@ -367,6 +367,30 @@ bool CreateOrUpdateElementDB(FString eos_id, int amount)
 
 bool UpdateElementDB(FString eos_id, int amount)
 {
+	FString mapName;
+	AsaApi::GetApiUtils().GetWorld()->GetMapName(&mapName);
+	std::string escapedMapName = ElementTransfer::elementTransferDB->escapeString(mapName.ToString());
+
+	std::vector<std::pair<std::string, std::string>> data =
+	{
+		{"Amount", std::to_string(amount)},
+		{"MapName", escapedMapName}
+	};
+
+	std::string escapedEosID = ElementTransfer::elementTransferDB->escapeString(eos_id.ToString());
+	std::string condition = fmt::format("EosId='{}'", escapedEosID);
+
+	if (ElementTransfer::elementTransferDB->update(ElementTransfer::config["PluginDBSettings"]["TableName"].get<std::string>(), data, condition))
+	{
+		if (ElementTransfer::isDebug)
+		{
+			Log::GetLog()->warn("uploaded element updated db");
+		}
+
+		return true;
+	}
+
+	return false;
 
 }
 
