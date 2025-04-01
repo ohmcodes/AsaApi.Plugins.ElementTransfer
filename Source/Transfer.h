@@ -412,7 +412,7 @@ void DownloadElementCallback(AShooterPlayerController* pc, FString* param, int, 
 		// discord report
 		if (command.value("NotifDiscord", false) == true)
 		{
-			std::string msg = fmt::format(ElementTransfer::config["DiscordBot"]["Messages"].value("DownloadMSG", "Player {0} downloaded element {1} on Map {3}").c_str(), pc->GetCharacterName().ToString(), downloadedElement, mapName.ToString());
+			std::string msg = fmt::format(ElementTransfer::config["DiscordBot"]["Messages"].value("DownloadMSG", "Player {0} downloaded element {1} on Map {2}").c_str(), pc->GetCharacterName().ToString(), downloadedElement, mapName.ToString());
 
 			SendMessageToDiscord(msg);
 		}
