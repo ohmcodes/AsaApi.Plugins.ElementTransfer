@@ -1,0 +1,135 @@
+{
+  "General": {
+    "NotifDisplayTime": 3,
+    "NotifTextSize": 1.3,
+    "ElementBPCheck": [
+      "Blueprint'/Game/PrimalEarth/CoreBlueprints/Resources/PrimalItemResource_Element.PrimalItemResource_Element'",
+      "Blueprint'/Game/PrimalEarth/CoreBlueprints/Resources/PrimalItemResource_ElementPowerNode.PrimalItemResource_ElementPowerNode'"
+    ],
+    "ElementBP": "Blueprint'/Game/PrimalEarth/CoreBlueprints/Resources/PrimalItemResource_Element.PrimalItemResource_Element'"
+  },
+  "Debug": {
+    "ElementTransfer": true,
+    "Permissions": true,
+    "Points": true
+  },
+  "Commands": {
+    "UploadCMD": "/upload",
+    "DownloadCMD": "/download",
+    "CheckUploadedCMD": "/check",
+    "CheckLimitCMD": "/checklimit"
+  },
+  "Messages": {
+    "PermErrorMSG": "You don't have permission to use this command.",
+    "PointsErrorMSG": "Not enough points.",
+    "UploadErrorMSG": "Element Upload Error",
+    "DownloadErrorMSG": "Element Download Error",
+    "UploadMSG": "{0} Elements has been uploaded",
+    "DownloadMsg": "{0} Elements succesfuly downloaded. {1} remaining",
+    "UploadLimitMSG": "You have reached server maximum upload limit. {0}",
+    "DownloadLimitMSG": "You have reached server maximum download limit. {0}",
+    "NoElementMSG": "No uploaded element",
+    "NoAvailableSlotMSG": "No available slot.",
+    "TerminalRequiredMSG": "Find nearest upload/download terminal",
+    "SameMapNotAllowedMSG": "Downloading on the same map is not allowed",
+    "CheckUploadedMSG": "You have {0}/{1} uploaded element.",
+    "CheckLimitMSG": "Your current element upload limit {0}"
+  },
+  "DiscordBot": {
+    "ChannelID": "",
+    "Webhook": "",
+    "BotImageURL": "https://cdn.discordapp.com/app-icons/1171816727340920922/da901b44e76d1d880c876dc007437a3f.png",
+    "BotUsername": "ElementTransfer",
+    "DiscordEmbedTemplate": "",
+    "Messages": {
+      "UploadMSG": "Player {0} uploaded element {1}/{2} Map: {3}",
+      "DownloadMSG": "Player {0} downloaded element {1}/{2} on Map {3}",
+      "CheckUploadedMSG": "{0} has {1}/{2} uploaded element",
+      "CheckLimitMSG": "{0} check element upload limit {1}"
+    }
+  },
+  "PluginDBSettings": {
+    "UseMySQL": false,
+    "Host": "",
+    "User": "",
+    "Password": "",
+    "Database": "",
+    "TableName": "ElementTransfer",
+    "Port": 3306,
+    "MysqlSSLMode": -1,
+    "MysqlTLSVersion": "",
+    "SQLiteDatabasePath": ""
+  },
+  "PermissionsDBSettings": {
+    "Enabled": false,
+    "UseMySQL": false,
+    "Host": "",
+    "User": "",
+    "Password": "",
+    "Database": "",
+    "TableName": "Players",
+    "UniqueIDField": "EOS_Id",
+    "PermissionGroupField": "PermissionGroups",
+    "Port": 3306,
+    "MysqlSSLMode": -1,
+    "MysqlTLSVersion": "",
+    "SQLiteDatabasePath": ""
+  },
+  "PointsDBSettings": {
+    "Enabled": false,
+    "UseMySQL": false,
+    "Host": "",
+    "User": "",
+    "Password": "",
+    "Database": "",
+    "TableName": "ArkShopPlayers",
+    "UniqueIDField": "EosId",
+    "PointsField": "Points",
+    "TotalSpentField": "TotalSpent",
+    "Port": 3306,
+    "MysqlSSLMode": -1,
+    "MysqlTLSVersion": "",
+    "SQLiteDatabasePath": ""
+  },
+  "PermissionGroups": {
+    "Default": {
+      "Priority": 99
+    },
+    "Admins": {
+      "Priority": 1,
+      "Commands": {
+        "UploadCMD": {
+          "Enabled": true,
+          "Cost": 50,
+          "NotifDiscord": true,
+          "AllowUploadAnywhere": true,
+          "AllowAutomaticDownload": false,
+          "LimitUploadCount": 100,
+          "TriggerInterval": 60
+        },
+        "DownloadCMD": {
+          "Enabled": true,
+          "Cost": 0,
+          "NotifDiscord": true,
+          "AllowDownloadAnywhere": true,
+          "AllowDownloadSameMap": true,
+          "AutomaticDownloadTimer": 5,
+          "LimitDownloadCount": 0,
+          "TriggerInterval": 60
+        },
+        "CheckUploadedCMD": {
+          "Enabled": true,
+          "Cost": 0,
+          "NotifDiscord": true,
+          "TriggerInterval": 60
+        },
+        "CheckLimitCMD": {
+          "Enabled": true,
+          "Cost": 0,
+          "NotifDiscord": true,
+          "TriggerInterval": 60
+        }
+      }
+    }
+  }
+}
