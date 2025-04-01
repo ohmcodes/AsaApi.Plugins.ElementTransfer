@@ -126,7 +126,7 @@ void UploadElementCallback(AShooterPlayerController* pc, FString* param, int, in
 		int uploadAvailableLimit = 0;
 
 		// no limit
-		if (elementUploadLimit != -1)
+		if (elementUploadLimit == -1)
 		{
 			uploadAvailableLimit = 0;
 		}
