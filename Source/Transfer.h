@@ -70,12 +70,27 @@ void UploadElementCallback(AShooterPlayerController* pc, FString* param, int, in
 	if (!invComp) return;
 
 	int uploadedElement = CheckUploadedDB(pc->GetEOSId());
+	int remainingToBeUpload = 0;
 
 	// limit reached
 	if (elementUploadLimit != -1 && uploadedElement >= elementUploadLimit)
 	{
 		AsaApi::GetApiUtils().SendNotification(pc, FColorList::Orange, ElementTransfer::NotifDisplayTime, ElementTransfer::NotifTextSize, nullptr, ElementTransfer::config["Messages"].value("UploadLimitMSG", "You have reached server maximum upload limit. {0}").c_str(), elementUploadLimit);
 		return;
+	}
+
+	UPrimalItem* element = static_cast<UPrimalItem*>(ElementTransfer::ElementClass->GetDefaultObject(true));
+
+	if (!element) return;
+
+
+	if (elementUploadLimit != -1)
+	{
+		remainingToBeUpload = element->GetMaxItemQuantity(AsaApi::GetApiUtils().GetWorld());
+	}
+	else
+	{
+		remainingToBeUpload = std::abs(uploadedElement - elementUploadLimit);
 	}
 
 	TArray<UPrimalItem*> itemForRemoval;
@@ -119,24 +134,26 @@ void UploadElementCallback(AShooterPlayerController* pc, FString* param, int, in
 			continue;
 		}
 
+		
+
 		int itemQty = item->GetItemQuantity();
 		// check while looping
 		uploadedElement = CheckUploadedDB(pc->GetEOSId());
 
-		int uploadAvailableLimit = 0;
-
 		// no limit
 		if (elementUploadLimit == -1)
 		{
-			uploadAvailableLimit = 0;
+			remainingToBeUpload = itemQty;
 		}
 		else
 		{
-			uploadAvailableLimit = std::abs(uploadedElement - elementUploadLimit);
+			remainingToBeUpload = elementUploadLimit - uploadedElement;
 		}
+
+		if (remainingToBeUpload == 0) break;
 		
 		// limit reached
-		if (elementUploadLimit != -1 && uploadAvailableLimit <= 0)
+		if (elementUploadLimit != -1 && remainingToBeUpload <= 0)
 		{
 			AsaApi::GetApiUtils().SendNotification(pc, FColorList::Orange, ElementTransfer::NotifDisplayTime, ElementTransfer::NotifTextSize, nullptr, ElementTransfer::config["Messages"].value("UploadLimitMSG", "You have reached server maximum upload limit. {0}").c_str(), elementUploadLimit);
 			break;
@@ -146,11 +163,11 @@ void UploadElementCallback(AShooterPlayerController* pc, FString* param, int, in
 		if (uploadAmount == 0)
 		{
 			// if uploadAvailableLimit is higher than itemQty use ItemQty as amount
-			uploadAmount = uploadAvailableLimit > itemQty ? itemQty : uploadAvailableLimit;
+			uploadAmount = remainingToBeUpload > itemQty ? itemQty : remainingToBeUpload;
 		}
 		else
 		{
-			uploadAmount = uploadAvailableLimit > uploadAmount ? uploadAmount : uploadAvailableLimit;
+			uploadAmount = remainingToBeUpload > uploadAmount ? uploadAmount : remainingToBeUpload;
 		}
 
 		// upload
@@ -167,6 +184,7 @@ void UploadElementCallback(AShooterPlayerController* pc, FString* param, int, in
 				item->UpdatedItem(false, false);
 			}
 
+			remainingToBeUpload -= uploadAmount;
 			success++;
 		}
 		else
