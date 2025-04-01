@@ -493,14 +493,14 @@ void CheckElementUploadedCallback(AShooterPlayerController* pc, FString*, int, i
 		}
 
 		AsaApi::GetApiUtils().SendNotification(pc, FColorList::Green, ElementTransfer::NotifDisplayTime, ElementTransfer::NotifTextSize, nullptr, ElementTransfer::config["Messages"].value("CheckUploadedMSG", "You have {0}/{1} uploaded element.").c_str(), uploadedElement, elementUploadLimit);
-	}
 
-	// discord report
-	if (command.value("NotifDiscord", false) == true)
-	{
-		std::string msg = fmt::format(ElementTransfer::config["DiscordBot"]["Messages"].value("DiscordCheckUploadedMSG", "{0} has {1}/{2} uploaded element").c_str(), pc->GetCharacterName().ToString(), uploadedElement, elementUploadLimit);
+		// discord report
+		if (command.value("NotifDiscord", false) == true)
+		{
+			std::string msg = fmt::format(ElementTransfer::config["DiscordBot"]["Messages"].value("DiscordCheckUploadedMSG", "{0} has {1}/{2} uploaded element").c_str(), pc->GetCharacterName().ToString(), uploadedElement, elementUploadLimit);
 
-		SendMessageToDiscord(msg);
+			SendMessageToDiscord(msg);
+		}
 	}
 
 	// refresh command cooldown
