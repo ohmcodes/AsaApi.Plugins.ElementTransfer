@@ -113,13 +113,13 @@ void UploadElementCallback(AShooterPlayerController* pc, FString* param, int, in
 			continue;
 		}
 
-		Log::GetLog()->info("{}", item->DescriptiveNameBaseField().ToString());
-
 		if (!MatchBlueprintClass(item))
 		{
 			Log::GetLog()->info("Not match in BP {}", item->DescriptiveNameBaseField().ToString());
 			continue;
 		}
+
+		Log::GetLog()->info("{}", item->DescriptiveNameBaseField().ToString());
 
 		int itemQty = item->GetItemQuantity();
 		// check while looping
