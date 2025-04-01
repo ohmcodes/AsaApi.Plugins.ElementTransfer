@@ -19,7 +19,6 @@ namespace ElementTransfer
 
 	inline int uploadCooldown = 0;
 	inline int downloadCooldown = 0;
-	inline int checkUploadedCooldown = 0;
 	inline int checkLimitCooldown = 0;
 
 	inline UClass* ElementClass;

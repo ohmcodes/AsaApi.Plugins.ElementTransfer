@@ -386,7 +386,7 @@ void CheckElementUploadedCallback(AShooterPlayerController* pc, FString*, int, i
 		Log::GetLog()->warn("Function: {}", __FUNCTION__);
 
 	// Check Trigger interval
-	if (ElementTransfer::checkUploadedCooldown != 0 && ElementTransfer::counter >= ElementTransfer::checkUploadedCooldown)
+	if (ElementTransfer::checkLimitCooldown != 0 && ElementTransfer::counter >= ElementTransfer::checkLimitCooldown)
 	{
 		if (ElementTransfer::config["Debug"].value("ElementTransfer", false) == true)
 		{
@@ -463,7 +463,7 @@ void CheckElementUploadedCallback(AShooterPlayerController* pc, FString*, int, i
 	}
 
 	// refresh command cooldown
-	ElementTransfer::checkUploadedCooldown = ElementTransfer::counter + command.value("TriggerInterval", 60);
+	ElementTransfer::checkLimitCooldown = ElementTransfer::counter + command.value("TriggerInterval", 60);
 }
 
 void CheckDownloadLimitCallback(AShooterPlayerController* pc, FString*, int, int)
