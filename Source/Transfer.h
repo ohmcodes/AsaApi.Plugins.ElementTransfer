@@ -53,11 +53,11 @@ void UploadElementCallback(AShooterPlayerController* pc, FString* param, int, in
 	if (command.value("AllowUploadAnywhere", false) == false && !pc->ViewingAnUploadTerminal()) return;
 	
 	// execute
-	int success = 0;
 	int elementUploadLimit = command.value("LimitUploadCount", 0);
 	int uploadedElement = CheckUploadedDB(pc->GetEOSId());
 	int uploadAmount = 0;
 	int currentUploadedElement = 0;
+	int remainingToBeUpload = -1;
 
 	UPrimalInventoryComponent* invComp = pc->GetPlayerCharacter()->MyInventoryComponentField();
 
@@ -85,6 +85,7 @@ void UploadElementCallback(AShooterPlayerController* pc, FString* param, int, in
 	if (parsedCmd.IsValidIndex(1))
 	{
 		uploadAmount = std::atoi(parsedCmd[1].ToString().c_str());
+		remainingToBeUpload = uploadAmount;
 	}
 	
 	TArray<UPrimalItem*> itemForRemoval;
@@ -155,6 +156,8 @@ void UploadElementCallback(AShooterPlayerController* pc, FString* param, int, in
 		{
 			uploadAmount = uploadAmount > itemQty ? itemQty : uploadAmount;
 
+			if (remainingToBeUpload == 0) break;
+
 			Log::GetLog()->warn("2uploadAmount {}", uploadAmount);
 		}
 
@@ -176,8 +179,8 @@ void UploadElementCallback(AShooterPlayerController* pc, FString* param, int, in
 				item->UpdatedItem(false, false);
 			}
 
-			success++;
-			currentUploadedElement = 0;
+			remainingToBeUpload -= uploadAmount;
+			currentUploadedElement += uploadAmount;
 		}
 		else
 		{
@@ -190,7 +193,7 @@ void UploadElementCallback(AShooterPlayerController* pc, FString* param, int, in
 	}
 
 	// notif results
-	if (success > 0)
+	if (currentUploadedElement > 0)
 	{
 		FString mapName;
 		AsaApi::GetApiUtils().GetWorld()->GetMapName(&mapName);
@@ -200,17 +203,15 @@ void UploadElementCallback(AShooterPlayerController* pc, FString* param, int, in
 
 		if (ElementTransfer::isDebug)
 		{
-			Log::GetLog()->info("Player {} uploaded element {}/{} Map: {} {}", pc->GetCharacterName().ToString(), uploadAmount, elementUploadLimit, mapName.ToString(), __FUNCTION__);
+			Log::GetLog()->info("Player {} uploaded element {} Map: {} {}", pc->GetCharacterName().ToString(), currentUploadedElement, mapName.ToString(), __FUNCTION__);
 		}
 
-		AsaApi::GetApiUtils().SendNotification(pc, FColorList::Green, ElementTransfer::NotifDisplayTime, ElementTransfer::NotifTextSize, nullptr, ElementTransfer::config["Messages"].value("UploadMSG", "{0} Elements has been uploaded").c_str(), uploadAmount);
+		AsaApi::GetApiUtils().SendNotification(pc, FColorList::Green, ElementTransfer::NotifDisplayTime, ElementTransfer::NotifTextSize, nullptr, ElementTransfer::config["Messages"].value("UploadMSG", "{0} Elements has been uploaded").c_str(), currentUploadedElement);
 
 		// discord report
 		if (command.value("NotifDiscord", false) == true)
 		{
-			
-
-			std::string msg = fmt::format(ElementTransfer::config["DiscordBot"]["Messages"].value("UploadMSG", "Player {0} uploaded element {1}/{2} Map: {3}").c_str(), pc->GetCharacterName().ToString(), uploadAmount, elementUploadLimit, mapName.ToString());
+			std::string msg = fmt::format(ElementTransfer::config["DiscordBot"]["Messages"].value("UploadMSG", "Player {0} uploaded element {1} Map: {2}").c_str(), pc->GetCharacterName().ToString(), currentUploadedElement, mapName.ToString());
 
 			SendMessageToDiscord(msg);
 		}
