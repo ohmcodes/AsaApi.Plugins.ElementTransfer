@@ -349,8 +349,6 @@ void DownloadElementCallback(AShooterPlayerController* pc, FString* param, int, 
 	int iterCount = 0;
 	iterCount = static_cast<int>(ceil(itDec));
 
-	Log::GetLog()->warn("0downloadAmount {}", downloadAmount);
-
 	for (int i = 0; i < iterCount; i++)
 	{
 		if (emptySlot - 7 <= 0)
@@ -372,8 +370,6 @@ void DownloadElementCallback(AShooterPlayerController* pc, FString* param, int, 
 		if (!parsedCmd.IsValidIndex(1))
 		{
 			downloadAmount = remainingToBeDownload > maxStackQty ? maxStackQty : remainingToBeDownload;
-
-			Log::GetLog()->warn("1downloadAmount {}", downloadAmount);
 		}
 		// param specified
 		else
@@ -414,7 +410,7 @@ void DownloadElementCallback(AShooterPlayerController* pc, FString* param, int, 
 		// points deductions
 		Points(pc->GetEOSId(), command.value("Cost", 0));
 
-		if (ElementTransfer::config["Debug"].value("ElementTransfer", false) == true)
+		if (ElementTransfer::isDebug == true)
 		{
 			Log::GetLog()->info("Player {} downloaded element {} on Map {} {}", pc->GetCharacterName().ToString(), downloadedElement, mapName.ToString(), __FUNCTION__);
 		}
