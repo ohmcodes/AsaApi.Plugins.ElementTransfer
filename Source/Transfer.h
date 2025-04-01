@@ -123,10 +123,20 @@ void UploadElementCallback(AShooterPlayerController* pc, FString* param, int, in
 		// check while looping
 		uploadedElement = CheckUploadedDB(pc->GetEOSId());
 
-		int uploadAvailableLimit = std::abs(uploadedElement - elementUploadLimit);
+		int uploadAvailableLimit = 0;
+
+		// no limit
+		if (elementUploadLimit != -1)
+		{
+			uploadAvailableLimit = 0;
+		}
+		else
+		{
+			uploadAvailableLimit = std::abs(uploadedElement - elementUploadLimit);
+		}
 		
 		// limit reached
-		if (elementUploadLimit!=-1 && uploadAvailableLimit <= 0)
+		if (elementUploadLimit != -1 && uploadAvailableLimit <= 0)
 		{
 			AsaApi::GetApiUtils().SendNotification(pc, FColorList::Orange, ElementTransfer::NotifDisplayTime, ElementTransfer::NotifTextSize, nullptr, ElementTransfer::config["Messages"].value("UploadLimitMSG", "You have reached server maximum upload limit. {0}").c_str(), elementUploadLimit);
 			break;
