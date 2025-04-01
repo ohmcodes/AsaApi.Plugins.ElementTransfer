@@ -65,7 +65,12 @@ void UploadElementCallback(AShooterPlayerController* pc, FString* param, int, in
 		uploadAmount = std::atoi(parsedCmd[1].ToString().c_str());
 	}
 
-	UPrimalInventoryComponent* invComp = pc->GetPlayerCharacter()->MyInventoryComponentField();
+	ACharacter* character = pc->CharacterField().Get();
+	if (!character) return;
+
+	APrimalCharacter* primalCharacter = static_cast<APrimalCharacter*>(character);
+
+	UPrimalInventoryComponent* invComp = primalCharacter->MyInventoryComponentField();
 
 	if (!invComp) return;
 
