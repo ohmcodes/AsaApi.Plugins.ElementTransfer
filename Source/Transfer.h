@@ -171,8 +171,10 @@ void UploadElementCallback(AShooterPlayerController* pc, FString* param, int, in
 			uploadAmount = remainingToBeUpload > uploadAmount ? uploadAmount : remainingToBeUpload;
 		}
 
+		int totalUploadAmount = uploadAmount + uploadedElement;
+
 		// upload
-		if (CreateOrUpdateElementDB(pc->GetEOSId(), uploadAmount))
+		if (CreateOrUpdateElementDB(pc->GetEOSId(), totalUploadAmount))
 		{
 			// remove the whole stack
 			if (uploadAmount >= itemQty)
