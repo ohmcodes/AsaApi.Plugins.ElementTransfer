@@ -390,7 +390,7 @@ void DownloadElementCallback(AShooterPlayerController* pc, FString* param, int, 
 		if (remainingToBeDownload <= 0) break;
 
 		int totaldownloadAmount = std::abs(downloadAmount - uploadedElement);
-
+		
 		if (UpdateElementDB(pc->GetEOSId(), totaldownloadAmount))
 		{
 			UPrimalItem::AddNewItem(
