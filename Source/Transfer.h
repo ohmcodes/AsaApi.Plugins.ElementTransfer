@@ -65,18 +65,12 @@ void UploadElementCallback(AShooterPlayerController* pc, FString* param, int, in
 		uploadAmount = std::atoi(parsedCmd[1].ToString().c_str());
 	}
 
-	ACharacter* character = pc->CharacterField().Get();
-	if (!character) return;
-
-	APrimalCharacter* primalCharacter = static_cast<APrimalCharacter*>(character);
-
-	UPrimalInventoryComponent* invComp = primalCharacter->MyInventoryComponentField();
+	UPrimalInventoryComponent* invComp = pc->GetPlayerCharacter()->MyInventoryComponentField();
 
 	if (!invComp) return;
 
 	int uploadedElement = CheckUploadedDB(pc->GetEOSId());
 
-	
 	// limit reached
 	if (uploadedElement >= elementUploadLimit)
 	{
@@ -89,13 +83,13 @@ void UploadElementCallback(AShooterPlayerController* pc, FString* param, int, in
 
 	for (UPrimalItem* item : items)
 	{
-		if (!item->ClassPrivateField() || !item->bAllowRemovalFromInventory().Get())
+		if (!item->ClassPrivateField() || item->bAllowRemovalFromInventory().Get() == false)
 		{
 			Log::GetLog()->info("Item is Invalid {}", item->DescriptiveNameBaseField().ToString());
 			continue;
 		}
 
-		if (item->bIsEngram().Get())
+		if (item->bIsEngram().Get() == true)
 		{
 			Log::GetLog()->info("{} isEngram {}", item->DescriptiveNameBaseField().ToString(), item->bIsEngram().Get());
 			continue;
