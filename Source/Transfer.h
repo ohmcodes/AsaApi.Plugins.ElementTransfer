@@ -476,7 +476,7 @@ void CheckElementUploadedCallback(AShooterPlayerController* pc, FString*, int, i
 	nlohmann::json uploadCMD = GetCommandString(perms.ToString(), "UploadCMD");
 	if (!uploadCMD.is_null())
 	{
-		elementUploadLimit = command.value("LimitUploadCount", 0);
+		elementUploadLimit = uploadCMD.value("LimitUploadCount", 0);
 	}
 
 	success = uploadedElement < 0 ? false : true;
@@ -555,7 +555,6 @@ void CheckLimitCallback(AShooterPlayerController* pc, FString*, int, int)
 	}
 
 	// execute
-	bool success = false;
 	int elementUploadLimit = 0;
 
 	nlohmann::json uploadCMD = GetCommandString(perms.ToString(), "UploadCMD");
@@ -564,21 +563,15 @@ void CheckLimitCallback(AShooterPlayerController* pc, FString*, int, int)
 		elementUploadLimit = uploadCMD.value("LimitUploadCount", 0);
 	}
 
-	success = true;
+	// points deductions
+	Points(pc->GetEOSId(), command.value("Cost", 0));
 
-	// notif results
-	if (success)
+	if (ElementTransfer::config["Debug"].value("ElementTransfer", false) == true)
 	{
-		// points deductions
-		Points(pc->GetEOSId(), command.value("Cost", 0));
-
-		if (ElementTransfer::config["Debug"].value("ElementTransfer", false) == true)
-		{
-			Log::GetLog()->info("{} check element upload limit {} {}", pc->GetCharacterName().ToString(), elementUploadLimit, __FUNCTION__);
-		}
-
-		AsaApi::GetApiUtils().SendNotification(pc, FColorList::Green, ElementTransfer::NotifDisplayTime, ElementTransfer::NotifTextSize, nullptr, ElementTransfer::config["Messages"].value("CheckLimitMSG", "Your current element upload limit {0}").c_str(), elementUploadLimit);
+		Log::GetLog()->info("{} check element upload limit {} {}", pc->GetCharacterName().ToString(), elementUploadLimit, __FUNCTION__);
 	}
+
+	AsaApi::GetApiUtils().SendNotification(pc, FColorList::Green, ElementTransfer::NotifDisplayTime, ElementTransfer::NotifTextSize, nullptr, ElementTransfer::config["Messages"].value("CheckLimitMSG", "Your current element upload limit {0}").c_str(), elementUploadLimit);
 
 	// discord report
 	if (command.value("NotifDiscord", false) == true)
@@ -587,7 +580,6 @@ void CheckLimitCallback(AShooterPlayerController* pc, FString*, int, int)
 
 		SendMessageToDiscord(msg);
 	}
-
 
 	// refresh command cooldown
 	ElementTransfer::checkLimitCooldown = ElementTransfer::counter + command.value("TriggerInterval", 60);
