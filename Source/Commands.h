@@ -28,7 +28,7 @@ void AddOrRemoveCommands(bool addCmd = true)
 		}
 	}
 
-	const FString CheckElementUploaded = ElementTransfer::config["Commands"]["CheckUploadCMD"].get<std::string>().c_str();
+	const FString CheckElementUploaded = ElementTransfer::config["Commands"]["CheckUploadedCMD"].get<std::string>().c_str();
 	if (!CheckElementUploaded.IsEmpty())
 	{
 		if (addCmd)

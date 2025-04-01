@@ -6,7 +6,7 @@
 
 #include "Transfer.h"
 
-#include "Hooks.h"
+//#include "Hooks.h"
 
 #include "Timers.h"
 
@@ -28,7 +28,7 @@ void OnServerReady()
 	AddOrRemoveCommands();
 	AddReloadCommands();
 	SetTimers();
-	SetHooks();
+	//SetHooks();
 }
 
 DECLARE_HOOK(AShooterGameMode_BeginPlay, void, AShooterGameMode*);
@@ -56,5 +56,5 @@ extern "C" __declspec(dllexport) void Plugin_Unload()
 	AddOrRemoveCommands(false);
 	AddReloadCommands(false);
 	SetTimers(false);
-	SetHooks(false);
+	//SetHooks(false);
 }
