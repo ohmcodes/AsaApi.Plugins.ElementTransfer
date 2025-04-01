@@ -87,6 +87,7 @@ void UploadElementCallback(AShooterPlayerController* pc, FString* param, int, in
 			|| !item->DescriptiveNameBaseField().Contains("Element"))
 		{
 			Log::GetLog()->info("Item Invalid {}", item->DescriptiveNameBaseField().ToString());
+			continue;
 		}
 
 		if (!MatchBlueprintClass(item))
