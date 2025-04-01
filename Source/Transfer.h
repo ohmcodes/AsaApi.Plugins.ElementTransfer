@@ -107,13 +107,13 @@ void UploadElementCallback(AShooterPlayerController* pc, FString* param, int, in
 			continue;
 		}
 
-		Log::GetLog()->info("{}", item->DescriptiveNameBaseField().ToString());
-
 		if (!item->DescriptiveNameBaseField().Contains("Element"))
 		{
 			Log::GetLog()->info("{} desc not element: {}", !item->DescriptiveNameBaseField().Contains("Element"));
 			continue;
 		}
+
+		Log::GetLog()->info("{}", item->DescriptiveNameBaseField().ToString());
 
 		if (!MatchBlueprintClass(item))
 		{
