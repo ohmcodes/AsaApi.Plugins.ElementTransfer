@@ -367,13 +367,13 @@ void DownloadElementCallback(AShooterPlayerController* pc, FString* param, int, 
 
 	remainingToBeDownload = downloadAmount;
 
+	Log::GetLog()->warn("downloadAmount {}", downloadAmount);
+
 	// how many loop needed
 	float itDec = static_cast<float>(downloadAmount) / static_cast<float>(maxStackQty);
 
 	int iterCount = 0;
 	iterCount = static_cast<int>(ceil(itDec));
-
-	Log::GetLog()->warn("Goes here");
 
 	for (int i = 0; i < iterCount; i++)
 	{
@@ -398,6 +398,8 @@ void DownloadElementCallback(AShooterPlayerController* pc, FString* param, int, 
 
 		// remaining uploade limit reached
 		if (remainingToBeDownload <= 0) break;
+
+		Log::GetLog()->warn("Goes here");
 
 		int totaldownloadAmount = std::abs(downloadAmount - uploadedElement);
 		
