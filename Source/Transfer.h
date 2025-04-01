@@ -83,14 +83,13 @@ void UploadElementCallback(AShooterPlayerController* pc, FString* param, int, in
 
 	for (UPrimalItem* item : invComp->InventoryItemsField())
 	{
-		if (item->bIsEngram().Get() && item->IsItemSkin(false) && !item->DescriptiveNameBaseField().Contains("Element"))
-		{
-			Log::GetLog()->info("is engram, isitemskin, not element {}", item->DescriptiveNameBaseField().ToString());
+		if (item->bIsEngram().Get() && item->IsItemSkin(false) && !item->DescriptiveNameBaseField().Contains("Element")) continue;
 
+		if (!MatchBlueprintClass(item))
+		{
+			Log::GetLog()->info("Not match in BP {}", item->DescriptiveNameBaseField().ToString());
 			continue;
 		}
-
-		if (!MatchBlueprintClass(item)) continue;
 
 		int itemQty = item->GetItemQuantity();
 		// check while looping
