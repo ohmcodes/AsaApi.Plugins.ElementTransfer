@@ -49,7 +49,7 @@ void SendMessageToDiscord(std::string msg)
 		Log::GetLog()->error("Failed to send Post request. Error: {}", error.what());
 	}
 }
-
+ 
 bool Points(FString eos_id, int cost, bool check_points = false)
 {
 	if (cost == -1)
