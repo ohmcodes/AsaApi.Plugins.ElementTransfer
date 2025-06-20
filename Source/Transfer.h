@@ -111,7 +111,7 @@ void UploadElementCallback(AShooterPlayerController* pc, FString* param, int, in
 			continue;
 		}
 
-		if (item->IsItemSkin(false))
+		if (item->IsItemSkin())
 		{
 			//Log::GetLog()->info("{} isItemSkin {}", item->DescriptiveNameBaseField().ToString(), item->IsItemSkin(false));
 			continue;
@@ -308,6 +308,9 @@ void DownloadElementCallback(AShooterPlayerController* pc, FString* param, int, 
 
 	if (!element) return;
 
+	TSubclassOf<UPrimalItem> ElementSubClass;
+	ElementSubClass.uClass = ElementTransfer::ElementClass;
+
 	// check empty slot
 	int emptySlot = invComp->GetEmptySlotCount(false);
 
@@ -372,7 +375,7 @@ void DownloadElementCallback(AShooterPlayerController* pc, FString* param, int, 
 		if (UpdateElementDB(pc->GetEOSId(), totalDownloadAmount))
 		{
 			UPrimalItem::AddNewItem(
-				ElementTransfer::ElementClass,
+				ElementSubClass,
 				invComp,
 				false,
 				false,
@@ -386,6 +389,7 @@ void DownloadElementCallback(AShooterPlayerController* pc, FString* param, int, 
 				0.0f,
 				false,
 				false,
+				true,
 				true
 			);
 
