@@ -111,7 +111,7 @@ void UploadElementCallback(AShooterPlayerController* pc, FString* param, int, in
 			continue;
 		}
 
-		if (item->IsItemSkin())
+		if (item->IsItemSkin(false))
 		{
 			//Log::GetLog()->info("{} isItemSkin {}", item->DescriptiveNameBaseField().ToString(), item->IsItemSkin(false));
 			continue;
