@@ -390,7 +390,10 @@ void DownloadElementCallback(AShooterPlayerController* pc, FString* param, int, 
 				false,
 				false,
 				true,
-				true
+				true,
+				false,
+				false,
+				AsaApi::GetApiUtils().GetWorld()
 			);
 
 			downloadedElement += downloadAmount;
